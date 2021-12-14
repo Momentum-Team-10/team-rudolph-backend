@@ -22,7 +22,7 @@ class Question(models.Model):
     votes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_questions", blank=True)
-    answer = models.BooleanField(default=False)
+    answered = models.BooleanField(default=False)
 
 class Answer(models.Model):
     body = models.TextField()
