@@ -151,3 +151,5 @@ REST_FRAMEWORK = {
 
 django_on_heroku.settings(locals())
 del DATABASES['default']['OPTIONS']['sslmode']
+
+AUTH_USER_MODEL = 'api.User'
