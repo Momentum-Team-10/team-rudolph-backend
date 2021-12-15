@@ -14,5 +14,5 @@ class QuestionSerializer(serializers.ModelSerializer):
             'votes',
             'created_at',
             'favorited',
-            'answer',
+            'answered',
         )
