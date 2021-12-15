@@ -16,8 +16,8 @@ class QuestionList(ListCreateAPIView):
 class QuestionDetail(RetrieveAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    
-    
+
+
 class UsersAnswerList(ListAPIView):
     serializer_class = AnswerSerializer
 
@@ -36,11 +36,10 @@ class QsAnwerList(ListAPIView):
 class AnswerDetail(UpdateAPIView):
     serializer_class = AnswerSerializer
 
-
     def get_queryset(self):
         queryset = Answer.objects.filter(question_id=self.kwargs["pk"])
         return queryset
-    
+
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = get_object_or_404(queryset, pk=self.kwargs["ans"])
