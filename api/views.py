@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
 from .models import Question, Answer, User
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
 from .permissions import IsQuestionAuthor
 
 # Create your views here.
