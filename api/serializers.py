@@ -63,4 +63,5 @@ class UserSerializer(serializers.ModelSerializer):
             'questions',
             'answers',
             'image_url',
+            'date_joined',
         )
