@@ -23,4 +23,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('api-auth/', include('rest_framework.urls')),
     path('questions/', views.QuestionList.as_view(), name="question_list"),
+    path('questions/<int:pk>/', views.QuestionDetail.as_view(), name="question_detail"),
+    path('questions/<int:pk>/answers/', views.QsAnwerList.as_view(), name="qs_answer_list"),
 ]
