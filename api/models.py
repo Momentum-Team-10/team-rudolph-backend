@@ -24,6 +24,12 @@ class Question(models.Model):
     favorited = models.ManyToManyField('User', related_name="fav_questions", blank=True)
     answered = models.BooleanField(default=False)
 
+    def __repr__(self):
+        return f"<Question title={self.title}>"
+
+    def __str__(self):
+        return self.title
+
 class Answer(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="answers")
@@ -31,3 +37,9 @@ class Answer(models.Model):
     votes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_answers", blank=True)
+
+    def __repr__(self):
+        return f"<Answer author={self.author} question={self.question}>"
+
+    def __str__(self):
+        return self.title
