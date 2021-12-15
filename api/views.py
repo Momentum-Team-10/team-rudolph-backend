@@ -33,7 +33,8 @@ class QsAnwerList(ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, question=self.kwargs["pk"])
+        question = get_object_or_404(Question, pk=self.kwargs["pk"])
+        serializer.save(author=self.request.user, question=question)
 
 
 
