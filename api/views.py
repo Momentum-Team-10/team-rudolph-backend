@@ -1,13 +1,16 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
-from .models import Question, Answer
-from .serializers import AnswerSerializer, QuestionSerializer
+from .models import Question, Answer, User
+from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from .permissions import IsQuestionAuthor
 
 # Create your views here.
 
 class QuestionList(ListCreateAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -16,6 +19,7 @@ class QuestionList(ListCreateAPIView):
 class QuestionDetail(RetrieveDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionAuthor]
 
 
 class UsersAnswerList(ListAPIView):
@@ -27,6 +31,7 @@ class UsersAnswerList(ListAPIView):
 
 class QsAnwerList(ListCreateAPIView):
     serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         queryset = Answer.objects.filter(question_id=self.kwargs["pk"])
@@ -40,6 +45,7 @@ class QsAnwerList(ListCreateAPIView):
 
 class AnswerDetail(UpdateAPIView):
     serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Answer.objects.filter(question_id=self.kwargs["pk"])
@@ -50,3 +56,11 @@ class AnswerDetail(UpdateAPIView):
         obj = get_object_or_404(queryset, pk=self.kwargs["ans"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+
+class UserDetail(RetrieveAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+
