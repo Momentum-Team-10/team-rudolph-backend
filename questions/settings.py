@@ -154,3 +154,7 @@ django_on_heroku.settings(locals())
 del DATABASES['default']['OPTIONS']['sslmode']
 
 AUTH_USER_MODEL = 'api.User'
+
+DJOSER = {
+    'USER_CREATE_PASSWORD_RETYPE': True
+}
