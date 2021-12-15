@@ -23,9 +23,9 @@ The base url for all the extensions below is: `https://questions-t10.herokuapp.c
 ## User endpoints
 |**URL** |**Description**         |**Method**|**Request**   |**Response**     |
 |:------:|------------------------|----------|--------------|-----------------|
-|`/users/`|register a new user|`POST`|`username`<br>`password`<br>`re_password`|`HTTP_201_CREATED`<br>JSON of created User object|
-|`/users/me/`|retrieve authenticated user data|`GET`|-|`HTTP_200_OK`<br>JSON of authenticated User object|
-|`/users/me/`|update authenticated user data|`PATCH`|`{{ User.FIELDS_TO_UPDATE }}`|`HTTP_200_OK`<br>JSON of updated authenticated User object|
+|`/auth/users/`|register a new user|`POST`|`username`<br>`password`<br>`re_password`|`HTTP_201_CREATED`<br>JSON of created User object|
+|`/auth/users/me/`|retrieve authenticated user data|`GET`|-|`HTTP_200_OK`<br>JSON of authenticated User object|
+|`/auth/users/me/`|update authenticated user data|`PATCH`|`{{ User.FIELDS_TO_UPDATE }}`|`HTTP_200_OK`<br>JSON of updated authenticated User object|
 
 
 ## Database endpoints
