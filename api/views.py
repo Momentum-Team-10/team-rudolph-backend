@@ -24,7 +24,6 @@ class QuestionList(ListCreateAPIView):
     def get_queryset(self):
         if self.request.query_params.get("search"):
             search_value = self.request.query_params.get("search")
-            breakpoint()
             queryset = Question.objects.annotate(
                 search=SearchVector("title", "body")
             ).filter(search=search_value)
