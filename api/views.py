@@ -44,7 +44,7 @@ class UsersAnswerList(ListAPIView):
         queryset = Answer.objects.filter(author_id=self.kwargs["pk"])
         return queryset
 
-class QsAnwerList(ListCreateAPIView):
+class QsAnswerList(ListCreateAPIView):
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -77,9 +77,3 @@ class AnswerDetail(UpdateAPIView):
 class UserDetail(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-
-
-class QuestionSearch(ListAPIView):
-    serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
-    
