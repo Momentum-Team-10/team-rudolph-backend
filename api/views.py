@@ -19,7 +19,7 @@ class QuestionList(ListCreateAPIView):
 class QuestionDetail(RetrieveDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionAuthor]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class UsersAnswerList(ListAPIView):
