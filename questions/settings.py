@@ -162,7 +162,4 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'https://heard-all-day.netlify.app',
-    'http://localhost:3000',
-]
+CORS_ALLOW_ALL_ORIGINS = True
