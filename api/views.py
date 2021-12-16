@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
 from .models import Question, Answer, User
-from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer
+from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
 from .permissions import IsQuestionAuthor
+from django.contrib.postgres.search import SearchVector
 
 # Create your views here.
 
@@ -14,6 +15,20 @@ class QuestionList(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.query_params.get("search"):
+            return QuestionSearchSerializer
+        return super().get_serializer_class()
+
+    def get_queryset(self):
+        if self.request.query_params.get("search"):
+            search_term = self.request.query_params.get("search")
+            queryset = Question.objects.annotate(
+                search=SearchVector("title", "body")
+            ).filter(search=search_term)
+            return queryset
+        return super().get_queryset()
 
 
 class QuestionDetail(RetrieveDestroyAPIView):

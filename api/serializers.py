@@ -52,6 +52,22 @@ class QuestionForUserSerializer(serializers.ModelSerializer):
         )
 
 
+class QuestionSearchSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = Question
+        fields = (
+            'pk',
+            'title',
+            'body',
+            'author',
+            'votes',
+            'created_at',
+            'favorited',
+            'answered',
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
     questions = QuestionForUserSerializer(many=True, read_only=True)
     answers = AnswerSerializer(many=True, read_only=True)
