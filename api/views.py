@@ -37,10 +37,11 @@ class QuestionList(ModelViewSet):
 #         serializer.save(author=self.request.user)
 
 
-# class QuestionDetail(RetrieveDestroyAPIView):
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionAuthor]
+class QuestionDetail(RetrieveDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
 
 
 class UsersAnswerList(ListAPIView):
