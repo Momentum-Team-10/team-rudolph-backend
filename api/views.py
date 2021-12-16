@@ -4,14 +4,13 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIV
 from .models import Question, Answer, User
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
-from .permissions import IsQuestionAuthor
+from .permissions import IsQuestionAuthor, NoPermission
 from django.contrib.postgres.search import SearchVector
 
 
 class QuestionList(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -20,8 +19,16 @@ class QuestionList(ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
+        data = self.request.data
         if self.request.method == 'DELETE':
             permission_classes = [IsQuestionAuthor]
+        elif self.request.method == "PATCH":
+            if "favorited" in data:
+                permission_classes = [IsAuthenticated]
+            elif "title" in data or "body" in data:
+                permission_classes = [NoPermission]
+            elif "answered" in data:
+                permission_classes = [IsQuestionAuthor]
         else:
             permission_classes = [IsAuthenticatedOrReadOnly]
         return [permission() for permission in permission_classes]
