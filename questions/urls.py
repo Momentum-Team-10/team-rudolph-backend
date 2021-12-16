@@ -28,5 +28,4 @@ urlpatterns = [
     path('questions/<int:pk>/answers/<int:ans>/', views.AnswerDetail.as_view(), name="answer_detail"),
     path('user/<int:pk>/answers/', views.UsersAnswerList.as_view(), name="users_answer_list"),
     path('user/<int:pk>/', views.UserDetail.as_view(), name="user_detail"),
-    path('search/', views.QuestionSearch.as_view(), name="question-search")
 ]
