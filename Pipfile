@@ -13,6 +13,7 @@ bpython = "*"
 djoser = "*"
 django-on-heroku = "*"
 gunicorn = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
