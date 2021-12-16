@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.postgres",
 
     # my apps
     'api',
@@ -162,6 +163,6 @@ DJOSER = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'https://heard-all-day.netlify.app/',
+    'https://heard-all-day.netlify.app',
     'http://localhost:3000',
 ]
