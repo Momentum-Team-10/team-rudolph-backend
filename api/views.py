@@ -1,25 +1,47 @@
 from django.shortcuts import get_object_or_404, render
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
 from .models import Question, Answer, User
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser 
 from .permissions import IsQuestionAuthor
 
 # Create your views here.
 
-class QuestionList(ListCreateAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+
+class QuestionList(ModelViewSet):
+        queryset = Question.objects.all()
+        serializer_class = QuestionSerializer
+        permission_classes = [IsAuthenticatedOrReadOnly]
+        
+        def perform_create(self, serializer):
+            serializer.save(author=self.request.user)
+
+        def get_permissions(self):
+            """
+            Instantiates and returns the list of permissions that this view requires.
+            """
+            if self.request.method == 'DELETE':
+                permission_classes = [IsQuestionAuthor]
+            else:
+                permission_classes = [IsAuthenticatedOrReadOnly]
+            return [permission() for permission in permission_classes]
+
+# class QuestionList(ListCreateAPIView):
+#     queryset = Question.objects.all()
+#     serializer_class = QuestionSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+
+#     def perform_create(self, serializer):
+#         serializer.save(author=self.request.user)
 
 
 class QuestionDetail(RetrieveDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
 
 
 class UsersAnswerList(ListAPIView):
