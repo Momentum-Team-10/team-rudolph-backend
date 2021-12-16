@@ -16,15 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from api import views
+from rest_framework.routers import SimpleRouter
+from rest_framework import routers
+
+
+router = SimpleRouter()
+
+router.register(r'questions', views.QuestionList, basename='questions')
+
+# urlpatterns = [
+#     path("questions/", include(router.urls)),
+# ]
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api-auth/', include('rest_framework.urls')),
-    path('questions/', views.QuestionList.as_view(), name="question_list"),
-    path('questions/<int:pk>/', views.QuestionDetail.as_view(), name="question_detail"),
-    path('questions/<int:pk>/answers/', views.QsAnswerList.as_view(), name="qs_answer_list"),
+    path('', include(router.urls)),
+    # path('questions/', views.QuestionList.as_view(), name="question_list"),
+    # path('questions/<int:pk>/', views.QuestionDetail.as_view(), name="question_detail"),
+    path('questions/<int:pk>/answers/', views.QsAnwerList.as_view(), name="qs_answer_list"),
     path('questions/<int:pk>/answers/<int:ans>/', views.AnswerDetail.as_view(), name="answer_detail"),
     path('user/<int:pk>/answers/', views.UsersAnswerList.as_view(), name="users_answer_list"),
     path('user/<int:pk>/', views.UserDetail.as_view(), name="user_detail"),
