@@ -66,4 +66,5 @@ class UserDetail(RetrieveAPIView):
 
 class QuestionSearch(ListAPIView):
     serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
     
