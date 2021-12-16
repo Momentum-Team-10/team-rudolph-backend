@@ -2,45 +2,29 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
 from .models import Question, Answer, User
-<<<<<<< HEAD
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
-=======
-from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser 
->>>>>>> main
 from .permissions import IsQuestionAuthor
 from django.contrib.postgres.search import SearchVector
 
-# Create your views here.
-
-
 
 class QuestionList(ModelViewSet):
-        queryset = Question.objects.all()
-        serializer_class = QuestionSerializer
-        permission_classes = [IsAuthenticatedOrReadOnly]
-        
-        def perform_create(self, serializer):
-            serializer.save(author=self.request.user)
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-        def get_permissions(self):
-            """
-            Instantiates and returns the list of permissions that this view requires.
-            """
-            if self.request.method == 'DELETE':
-                permission_classes = [IsQuestionAuthor]
-            else:
-                permission_classes = [IsAuthenticatedOrReadOnly]
-            return [permission() for permission in permission_classes]
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
-# class QuestionList(ListCreateAPIView):
-#     queryset = Question.objects.all()
-#     serializer_class = QuestionSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     def perform_create(self, serializer):
-#         serializer.save(author=self.request.user)
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.request.method == 'DELETE':
+            permission_classes = [IsQuestionAuthor]
+        else:
+            permission_classes = [IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         if self.request.query_params.get("search"):
@@ -55,13 +39,6 @@ class QuestionList(ModelViewSet):
             ).filter(search=search_value)
             return queryset
         return super().get_queryset()
-
-
-class QuestionDetail(RetrieveDestroyAPIView):
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
 
 
 class UsersAnswerList(ListAPIView):
