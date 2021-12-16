@@ -23,7 +23,8 @@ class Question(models.Model):
     voted_on = models.ManyToManyField('User', related_name="voted_questions", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_questions", blank=True)
-    answered = models.BooleanField(default=False)
+    answered = models.ForeignKey('Answer', on_delete=models.DO_NOTHING, related_name="accepted", null=True, blank=True)
+
 
     def __repr__(self):
         return f"<Question title={self.title}>"
