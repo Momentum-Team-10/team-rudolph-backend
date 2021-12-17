@@ -78,7 +78,7 @@ GET /auth/users/me/
 ```
 
 ## Update Logged In User Info
-Only include fields meant to be updated
+Token authentication required. Should correspond to user being updated. Only include fields meant to be updated.
 ### Request
 ```json
 PATCH /auth/users/me/
@@ -89,6 +89,46 @@ PATCH /auth/users/me/
 ### Response
 ```json
 200 OK
+```
+
+## Get User Details
+Integer should be the id of the target user
+### Request
+```json
+GET /user/3/
+```
+### Response
+```json
+200 OK
+{
+	"username": "thomas",
+	"bio": null,
+	"questions": [
+		{
+			"pk": 11,
+			"title": "Why am I in couples counseling over a pan?",
+			"body": "The cast iron skillet had a ton of gunk on it, so I went to town on it with soap and iron wool. What's the big deal?",
+			"author": "thomas",
+			"votes": 0,
+			"created_at": "2021-12-17T11:21:43.613489Z",
+			"favorited": [],
+			"answered": null
+		}
+	],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": []
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
+}
 ```
 
 ## Get List of All Questions
@@ -117,7 +157,7 @@ GET /questions/
 ```
 
 ## Add New Question
-Title field is required, body field is optional
+Token authentication required. Title field is required, body field is optional
 ### Request
 ```json
 POST /questions/
@@ -174,42 +214,40 @@ GET /questions/9/
 }
 ```
 
-## Get User Details
-Integer should be the id of the target user
+## Delete Question
+Token authentication required. Authentication should match the author of the question. Body should be empty.
 ### Request
 ```json
-GET /user/3/
+DELETE /questions/11/
+```
+### Response
+```json
+204 No Content
+```
+
+## Search Questions
+Spaces in search term need to replaced by a +. 
+### Request
+```json
+GET /questions?search=knife
 ```
 ### Response
 ```json
 200 OK
-{
-	"username": "thomas",
-	"bio": null,
-	"questions": [
-		{
-			"pk": 11,
-			"title": "Why am I in couples counseling over a pan?",
-			"body": "The cast iron skillet had a ton of gunk on it, so I went to town on it with soap and iron wool. What's the big deal?",
-			"author": "thomas",
-			"votes": 0,
-			"created_at": "2021-12-17T11:21:43.613489Z",
-			"favorited": [],
-			"answered": null
-		}
-	],
-	"answers": [
-		{
-			"pk": 2,
-			"body": "Is it non-stick?",
-			"author": "thomas",
-			"question": 9,
-			"votes": 1,
-			"created_at": "2021-12-15T00:19:51.903050Z",
-			"favorited": []
-		}
-	],
-	"image_url": null,
-	"date_joined": "2021-12-14T22:51:16.121295Z"
-}
+[
+	{
+		"pk": 9,
+		"title": "Why is my knife so dull?",
+		"body": "I make sure to run it in the dishwasher after every use...",
+		"author": "admin",
+		"votes": 1,
+		"created_at": "2021-12-15T00:10:31.523378Z",
+		"favorited": [
+			1,
+			2,
+			3
+		],
+		"answered": null
+	}
+]
 ```
