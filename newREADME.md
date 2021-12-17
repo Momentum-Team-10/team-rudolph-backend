@@ -1,7 +1,29 @@
 # Questions API Documentation
 
+## Table of Contents
+* General Instructions
+* CRUD vs. HTTP Reference
+* User Login
+* User Log Out
+* Register New User
+* Retrieve Logged In User Info
+* Update Logged In User Info
+* Get User Details
+* List All Questions
+* Add New Question
+* Single Question Details
+* Delete Question
+* Search Questions
+* Search Answers
+
+## General Instructions
 The base url for all the extensions below is: `https://questions-t10.herokuapp.com/`.
 Please be sure to use double quotes ("") for all JSON requests.
+Several endpoints require Token Authentication. This is done in the header of the HTTP request, with the following form:
+```http
+Authentication: Token <token string>
+```
+Please refer to the documentation for the HTTP request library you are using to ensure the proper syntax.
 
 ## CRUD vs. HTTP Reference
 |**CRUD**|**HTTP**|
@@ -131,7 +153,7 @@ GET /user/3/
 }
 ```
 
-## Get List of All Questions
+## List All Questions
 Body should be empty
 ### Request
 ```json
