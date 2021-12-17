@@ -251,3 +251,25 @@ GET /questions?search=knife
 	}
 ]
 ```
+
+## Search Answers
+Spaces in search term need to replaced by a +.
+### Request
+```json
+GET /answers?search=soak
+```
+### Response
+```json
+200 OK
+[
+	{
+		"pk": 1,
+		"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+		"author": "james",
+		"question": 9,
+		"votes": 1,
+		"created_at": "2021-12-15T00:19:28.001432Z",
+		"favorited": []
+	}
+]
+```
