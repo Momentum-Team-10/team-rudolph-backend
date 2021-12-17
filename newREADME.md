@@ -12,20 +12,108 @@ The base url for all the extensions below is: `https://questions-t10.herokuapp.c
 |Delete|DELETE|
 
 
-## Token Authentication
+## User Login
+Username and password required
+### Request
+```json
+POST /auth/token/login/
+{
+    "username": "babish",
+    "password": "tinywhisk"
+}
+```
 
-|**URL** |**Description**         |**Method**|**Request**   |**Response**     |
-|:------:|------------------------|----------|--------------|-----------------|
-|`/token/login/`|Token authenticated login|`POST`|`username`<br>`password`|`HTTP_200_OK`<br>`auth_token`|
-|`/token/logout/`|Token authenticated logout|`POST`|-|`HTTP_204_NO_CONTENT`|
+### Response
+```json
+200 OK
+{
+    "auth_token": "heybabyihearthebluesacallintossedsaladandscrambledeggs"
+}
+```
 
 
-## User endpoints
-|**URL** |**Description**         |**Method**|**Request**   |**Response**     |
-|:------:|------------------------|----------|--------------|-----------------|
-|`/auth/users/`|register a new user|`POST`|`username`<br>`password`<br>`re_password`|`HTTP_201_CREATED`<br>JSON of created User object|
-|`/auth/users/me/`|retrieve authenticated user data|`GET`|-|`HTTP_200_OK`<br>JSON of authenticated User object|
-|`/auth/users/me/`|update authenticated user data|`PATCH`|`{{ User.FIELDS_TO_UPDATE }}`|`HTTP_200_OK`<br>JSON of updated authenticated User object|
+## User Log Out
+Token authentication required, body should be empty
+### Request
+```json
+POST /auth/token/logout/
+```
+
+### Response
+```json
+204 No Content
+```
+
+
+## Register New User
+Username, password, and retyped password required
+### Request
+```json
+POST /auth/users/
+{
+    "username": "chefjohn",
+    "password": "cayennepepper",
+    "re_password": "cayennepepper"
+}
+```
+### Response
+```json
+201 Created
+{
+    "email": "",
+    "username": "chefjohn",
+    "id": 5
+}
+```
+
+
+## Retrieve Logged In User Info
+Body should be empty
+### Request
+```json
+GET /auth/users/me/
+```
+### Response
+```json
+200 OK
+{
+    "email": "",
+    "username": "sohla",
+    "id": 3
+}
+```
+
+
+## Update Logged In User Info
+Only include fields meant to be updated
+### Request
+```json
+PATCH /auth/users/me/
+{
+    "bio": "I am 50 years young, travel with my Mandelorian companion, and have a fondness for Bone Broth."
+}
+```
+### Response
+```json
+200 OK
+```
+
+
+## Get List of All Questions
+Body should be empty
+### Request
+```json
+GET /questions/
+```
+### Response
+```json
+
+```
+
+
+
+
+
 
 
 ## Database endpoints
