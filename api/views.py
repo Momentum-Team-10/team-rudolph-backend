@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
 from .models import Question, Answer, User
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly 
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
 from .permissions import IsQuestionAuthor, NoPermission
 from django.contrib.postgres.search import SearchVector
 
@@ -53,14 +53,16 @@ class AnswerList(ListAPIView):
 
     def get_queryset(self):
         search_value = self.request.query_params.get("search")
-        queryset = Question.objects.annotate(
-            search=SearchVector("title", "body")
+        queryset = Answer.objects.annotate(
+            search=SearchVector("body")
         ).filter(search=search_value)
         return queryset
 
     def get_permissions(self):
         if "search" not in self.request.query_params:
             permission_classes = [NoPermission]
+        else:
+            permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
 
 
