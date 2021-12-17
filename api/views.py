@@ -58,6 +58,11 @@ class AnswerList(ListAPIView):
         ).filter(search=search_value)
         return queryset
 
+    def get_permissions(self):
+        if "search" not in self.request.query_params:
+            permission_classes = [NoPermission]
+        return [permission() for permission in permission_classes]
+
 
 class UsersAnswerList(ListAPIView):
     serializer_class = AnswerSerializer
