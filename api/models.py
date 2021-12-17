@@ -32,6 +32,10 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    def favs(self):
+        return self.favorited.all()
+
+
 class Answer(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="answers")
