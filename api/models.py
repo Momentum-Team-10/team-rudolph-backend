@@ -32,9 +32,22 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
-    def favs(self):
-        return self.favorited.all()
+    def get_fav_users(self):
+        favs = self.favorited.all()
+        fav_users = []
+        for user in favs:
+            fav_users.append(user.pk)
+        return fav_users
 
+    def update_favs(self, request):
+        fav_users = self.get_fav_users()
+        user = request.data["favorited"][0]
+        if user in fav_users:
+            new_favs = fav_users.remove(user)
+        else:
+            new_favs = fav_users.append(user)
+            new_favs.sort()
+        return new_favs
 
 class Answer(models.Model):
     body = models.TextField()
