@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     image_url = models.CharField(max_length=100, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    
+
     def __repr__(self):
         return f"<User username={self.username}>"
 
@@ -20,11 +20,11 @@ class Question(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="questions")
     votes = models.IntegerField(default=0)
-    voted_on = models.ManyToManyField('User', related_name="voted_questions", blank=True)
+    upvotes = models.ManyToManyField('User', related_name="upvoted_questions", blank=True)
+    downvotes = models.ManyToManyField('User', related_name="downvoted_questions", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_questions", blank=True)
     answered = models.ForeignKey('Answer', on_delete=models.DO_NOTHING, related_name="accepted", null=True, blank=True)
-
 
     def __repr__(self):
         return f"<Question title={self.title}>"
