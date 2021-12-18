@@ -47,10 +47,38 @@ class Question(models.Model):
             fav_users.append(id)
         return fav_users
 
-    def update_votes(self):
-        upvotes = len(self.upvotes.all())
-        downvotes = len(self.downvotes.all())
-        return upvotes-downvotes
+    def update_votes(self, action, id):
+        if action == 'upvote':
+            upvotes, downvotes = self.upvote(id)
+        elif action == 'downvote':
+            upvotes, downvotes = self.downvote(id)
+        votes = len(upvotes)-len(downvotes)
+        return upvotes, downvotes, votes
+
+    def get_votes(self):
+        upvotes = list(self.upvotes.all())
+        downvotes = list(self.downvotes.all())
+        return upvotes, downvotes
+
+    def upvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in upvotes:
+            upvotes.remove(id)
+        else:
+            upvotes.append(id)
+            if id in downvotes:
+                downvotes.remove(id)
+        return upvotes, downvotes
+
+    def downvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in downvotes:
+            downvotes.remove(id)
+        else:
+            downvotes.append(id)
+            if id in upvotes:
+                upvotes.remove(id)
+        return upvotes, downvotes
 
 
 class Answer(models.Model):
