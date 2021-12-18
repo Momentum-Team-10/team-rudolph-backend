@@ -236,6 +236,33 @@ GET /questions/9/
 }
 ```
 
+## Update Favorited Field on Question
+Token authentication required. If User has already favorited the question, their pk will be removed from the Favorited field.
+### Request
+```json
+PATCH /questions/9/
+{
+	"favorited": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": 0,
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null
+}
+```
+
 ## Delete Question
 Token authentication required. Authentication should match the author of the question. Body should be empty.
 ### Request
@@ -294,4 +321,29 @@ GET /answers?search=soak
 		"favorited": []
 	}
 ]
+```
+
+## Update Favorited Field on Answer
+Token authentication required. If User has already favorited the answer, their pk will be removed from the Favorited field.
+### Request
+```json
+PATCH /questions/9/answers/2/
+{
+	"favorited": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 2,
+	"body": "Is it non-stick?",
+	"author": "thomas",
+	"question": 9,
+	"votes": 1,
+	"created_at": "2021-12-15T00:19:51.903050Z",
+	"favorited": [
+		3
+	]
+}
 ```
