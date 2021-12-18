@@ -34,7 +34,7 @@ Please refer to the documentation for the HTTP request library you are using to 
 |Delete|DELETE|
 
 ## User Login
-Username and password required
+Username and password required.
 ### Request
 ```json
 POST /auth/token/login/
@@ -52,7 +52,7 @@ POST /auth/token/login/
 ```
 
 ## User Log Out
-Token authentication required, body should be empty
+Token authentication required, body should be empty.
 ### Request
 ```json
 POST /auth/token/logout/
@@ -63,7 +63,7 @@ POST /auth/token/logout/
 ```
 
 ## Register New User
-Username, password, and retyped password required
+Username, password, and retyped password required.
 ### Request
 ```json
 POST /auth/users/
@@ -84,7 +84,7 @@ POST /auth/users/
 ```
 
 ## Retrieve Logged In User Info
-Body should be empty
+Body should be empty.
 ### Request
 ```json
 GET /auth/users/me/
@@ -93,9 +93,24 @@ GET /auth/users/me/
 ```json
 200 OK
 {
-    "email": "",
-    "username": "sohla",
-    "id": 3
+	"username": "thomas",
+	"bio": null,
+	"questions": [],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": [
+				3
+			]
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
 }
 ```
 
@@ -105,16 +120,36 @@ Token authentication required. Should correspond to user being updated. Only inc
 ```json
 PATCH /auth/users/me/
 {
-    "bio": "I am 50 years young, travel with my Mandelorian companion, and have a fondness for Bone Broth."
+    "bio": "I like the InstaPot."
 }
 ```
 ### Response
 ```json
 200 OK
+{
+	"username": "thomas",
+	"bio": "I like the InstaPot.",
+	"questions": [],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": [
+				3
+			]
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
+}
 ```
 
 ## Get User Details
-Integer should be the id of the target user
+Integer should be the id of the target user. Body should be empty.
 ### Request
 ```json
 GET /user/3/
@@ -154,7 +189,7 @@ GET /user/3/
 ```
 
 ## List All Questions
-Body should be empty
+Body should be empty.
 ### Request
 ```json
 GET /questions/
@@ -179,7 +214,7 @@ GET /questions/
 ```
 
 ## Add New Question
-Token authentication required. Title field is required, body field is optional
+Token authentication required. Title field is required, body field is optional.
 ### Request
 ```json
 POST /questions/
@@ -205,7 +240,7 @@ POST /questions/
 ```
 
 ## Single Question Details
-Integer should be the id of the target question
+Integer should be the id of the target question. Body should be empty.
 ### Request
 ```json
 GET /questions/9/
@@ -275,7 +310,7 @@ DELETE /questions/11/
 ```
 
 ## Search Questions
-Spaces in search term need to replaced by a +. 
+Spaces in search term need to replaced by a +. Body should be empty.
 ### Request
 ```json
 GET /questions?search=knife
@@ -302,7 +337,7 @@ GET /questions?search=knife
 ```
 
 ## Search Answers
-Spaces in search term need to replaced by a +.
+Spaces in search term need to replaced by a +. Body should be empty.
 ### Request
 ```json
 GET /answers?search=soak
