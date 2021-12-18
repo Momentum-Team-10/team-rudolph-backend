@@ -47,6 +47,12 @@ class Question(models.Model):
             fav_users.append(id)
         return fav_users
 
+    def update_votes(self):
+        upvotes = len(self.upvotes.all())
+        downvotes = len(self.downvotes.all())
+        return upvotes-downvotes
+
+
 class Answer(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="answers")
