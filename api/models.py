@@ -61,3 +61,19 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_fav_users(self):
+        favs = self.favorited.all()
+        fav_users = []
+        for user in favs:
+            fav_users.append(user.pk)
+        return fav_users
+
+    def update_favs(self, id):
+        fav_users = self.get_fav_users()
+        if id in fav_users:
+            fav_users.remove(id)
+        else:
+            fav_users.append(id)
+        return fav_users
+
