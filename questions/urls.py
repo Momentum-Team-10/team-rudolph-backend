@@ -35,4 +35,5 @@ urlpatterns = [
     path('user/<int:pk>/answers/', views.UsersAnswerList.as_view(), name="users_answer_list"),
     path('user/<int:pk>/', views.UserDetail.as_view(), name="user_detail"),
     path('answers/', views.AnswerList.as_view(), name="search_answer_list"),
+    path('tags/', views.AddListTags.as_view(), name="add_list_tags"),
 ]
