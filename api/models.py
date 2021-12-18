@@ -39,15 +39,13 @@ class Question(models.Model):
             fav_users.append(user.pk)
         return fav_users
 
-    def update_favs(self, request):
+    def update_favs(self, id):
         fav_users = self.get_fav_users()
-        user = request.data["favorited"][0]
-        if user in fav_users:
-            new_favs = fav_users.remove(user)
+        if id in fav_users:
+            fav_users.remove(id)
         else:
-            new_favs = fav_users.append(user)
-            new_favs.sort()
-        return new_favs
+            fav_users.append(id)
+        return fav_users
 
 class Answer(models.Model):
     body = models.TextField()
