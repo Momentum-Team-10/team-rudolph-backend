@@ -12,9 +12,11 @@
 * List All Questions
 * Add New Question
 * Single Question Details
+* Update Favorited Field on Question
 * Delete Question
 * Search Questions
 * Search Answers
+* Update Favorited Field on Answer
 
 ## General Instructions
 The base url for all the extensions below is: `https://questions-t10.herokuapp.com/`.
