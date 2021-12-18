@@ -113,6 +113,16 @@ class AnswerDetail(UpdateAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+        if 'favorited' in self.request.data:
+            answer = self.get_object()
+            data_copy = self.request.data.copy()
+            user = self.request.user.pk
+            data_copy['favorited'] = answer.update_favs(user)
+            kwargs['data'] = data_copy
+        return serializer_class(*args, **kwargs)
 
 
 class UserDetail(RetrieveAPIView):
