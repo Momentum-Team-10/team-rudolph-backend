@@ -125,7 +125,6 @@ class QsAnswerList(ListCreateAPIView):
 
 class AnswerDetail(UpdateAPIView):
     serializer_class = AnswerSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Answer.objects.filter(question_id=self.kwargs["pk"])
@@ -140,13 +139,35 @@ class AnswerDetail(UpdateAPIView):
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs.setdefault('context', self.get_serializer_context())
-        if 'favorited' in self.request.data:
+        data = self.request.data
+        if 'favorited' in data:
             answer = self.get_object()
-            data_copy = self.request.data.copy()
+            data_copy = data.copy()
             user = self.request.user.pk
             data_copy['favorited'] = answer.update_favs(user)
             kwargs['data'] = data_copy
+        elif 'upvotes' in data or 'downvotes' in data:
+            if 'upvotes' in data:
+                action = "upvote"
+            else:
+                action = "downvote"
+            answer =self.get_object()
+            data_copy = data.copy()
+            user = self.request.user.pk
+            upvotes, downvotes, votes = answer.update_votes(action, user)
+            data_copy['upvotes'] = upvotes
+            data_copy['downvotes'] = downvotes
+            data_copy['votes'] = votes
+            kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
+
+    def get_permissions(self):
+        data = self.request.data
+        if "favorited" in data or "upvotes" in data or "downvotes" in data:
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [NoPermission]
+        return [permission() for permission in permission_classes]
 
 
 class UserDetail(RetrieveAPIView):
