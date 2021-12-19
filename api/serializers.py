@@ -54,7 +54,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class QuestionForUserSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
 
     class Meta:
         model = Question
@@ -67,13 +67,13 @@ class QuestionForUserSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
-            # 'tags',
+            'tags',
         )
 
 
 class QuestionSearchSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
 
     class Meta:
         model = Question
@@ -86,7 +86,7 @@ class QuestionSearchSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
-            # 'tags',
+            'tags',
         )
 
 
