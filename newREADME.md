@@ -1,27 +1,30 @@
 # Questions API Documentation
 
 ## Table of Contents
-* General Instructions
-* CRUD vs. HTTP Reference
-* User Login
-* User Log Out
-* Register New User
-* Retrieve Logged In User Info
-* Update Logged In User Info
-* Get User Details
-* List All Questions
-* Add New Question
-* Single Question Details
-* Delete Question
-* Search Questions
-* Search Answers
+* [General Instructions]()
+* [CRUD vs. HTTP Reference]()
+* [User Login]()
+* [User Log Out]()
+* [Register New User]()
+* [Retrieve Logged In User Info]()
+* [Update Logged In User Info]()
+* [Get User Details]()
+* [List All Questions]()
+* [Add New Question]()
+* [Single Question Details]()
+* [Update Question's Favorited Field]()
+* [Update Question's Accepted Answer]()
+* [Delete Question]()
+* [Search Questions]()
+* [Search Answers]()
+* [Update Answer's Favorited Field]()
 
 ## General Instructions
 The base url for all the extensions below is: `https://questions-t10.herokuapp.com/`.
 Please be sure to use double quotes ("") for all JSON requests.
 Several endpoints require Token Authentication. This is done in the header of the HTTP request, with the following form:
 ```http
-Authentication: Token <token string>
+Authentication: "Token <token string>"
 ```
 Please refer to the documentation for the HTTP request library you are using to ensure the proper syntax.
 
@@ -236,7 +239,7 @@ GET /questions/9/
 }
 ```
 
-## Update Favorited Field on Question
+## Update Question's Favorited Field
 Token authentication required. If User has already favorited the question, their pk will be removed from the Favorited field.
 ### Request
 ```json
@@ -362,7 +365,7 @@ GET /answers?search=soak
 ]
 ```
 
-## Update Favorited Field on Answer
+## Update Answer's Favorited Field
 Token authentication required. If User has already favorited the answer, their pk will be removed from the Favorited field.
 ### Request
 ```json
