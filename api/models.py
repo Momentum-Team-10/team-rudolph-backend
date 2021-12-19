@@ -60,12 +60,53 @@ class Question(models.Model):
             fav_users.append(id)
         return fav_users
 
+    def update_votes(self, action, id):
+        if action == 'upvote':
+            upvotes, downvotes = self.upvote(id)
+        elif action == 'downvote':
+            upvotes, downvotes = self.downvote(id)
+        votes = len(upvotes)-len(downvotes)
+        return upvotes, downvotes, votes
+
+    def get_votes(self):
+        upvotes = self.convert_to_pk(list(self.upvotes.all()))
+        downvotes = self.convert_to_pk(list(self.downvotes.all()))
+        return upvotes, downvotes
+
+    def convert_to_pk(self, list):
+        new_list = []
+        for user in list:
+            new_list.append(user.pk)
+        return new_list
+
+    def upvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in upvotes:
+            upvotes.remove(id)
+        else:
+            upvotes.append(id)
+            if id in downvotes:
+                downvotes.remove(id)
+        return upvotes, downvotes
+
+    def downvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in downvotes:
+            downvotes.remove(id)
+        else:
+            downvotes.append(id)
+            if id in upvotes:
+                upvotes.remove(id)
+        return upvotes, downvotes
+
+
 class Answer(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="answers")
     question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name="answers")
     votes = models.IntegerField(default=0)
-    voted_on = models.ManyToManyField('User', related_name="voted_answers", blank=True)
+    upvotes = models.ManyToManyField('User', related_name="upvoted_answers", blank=True)
+    downvotes = models.ManyToManyField('User', related_name="downvoted_answers", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_answers", blank=True)
 
@@ -89,4 +130,43 @@ class Answer(models.Model):
         else:
             fav_users.append(id)
         return fav_users
+
+    def update_votes(self, action, id):
+        if action == 'upvote':
+            upvotes, downvotes = self.upvote(id)
+        elif action == 'downvote':
+            upvotes, downvotes = self.downvote(id)
+        votes = len(upvotes)-len(downvotes)
+        return upvotes, downvotes, votes
+
+    def get_votes(self):
+        upvotes = self.convert_to_pk(list(self.upvotes.all()))
+        downvotes = self.convert_to_pk(list(self.downvotes.all()))
+        return upvotes, downvotes
+
+    def convert_to_pk(self, list):
+        new_list = []
+        for user in list:
+            new_list.append(user.pk)
+        return new_list
+
+    def upvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in upvotes:
+            upvotes.remove(id)
+        else:
+            upvotes.append(id)
+            if id in downvotes:
+                downvotes.remove(id)
+        return upvotes, downvotes
+
+    def downvote(self, id):
+        upvotes, downvotes = self.get_votes()
+        if id in downvotes:
+            downvotes.remove(id)
+        else:
+            downvotes.append(id)
+            if id in upvotes:
+                upvotes.remove(id)
+        return upvotes, downvotes
 

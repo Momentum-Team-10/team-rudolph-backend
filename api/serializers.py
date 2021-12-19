@@ -22,6 +22,8 @@ class AnswerSerializer(serializers.ModelSerializer):
             'author',
             'question',
             'votes',
+            'upvotes',
+            'downvotes',
             'created_at',
             'favorited',
         )
@@ -40,6 +42,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             'body',
             'author',
             'votes',
+            'upvotes',
+            'downvotes',
             'answers',
             'created_at',
             'favorited',
