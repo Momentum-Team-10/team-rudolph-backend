@@ -2,11 +2,19 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView, RetrieveDestroyAPIView
-from .models import Question, Answer, User
-from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer
+from .models import Question, Answer, User, Tag
+from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer, TagSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
 from .permissions import IsQuestionAuthor, NoPermission
 from django.contrib.postgres.search import SearchVector
+
+class AddListTags(ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 class QuestionList(ModelViewSet):
@@ -128,3 +136,5 @@ class AnswerDetail(UpdateAPIView):
 class UserDetail(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
