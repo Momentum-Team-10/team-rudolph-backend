@@ -69,9 +69,15 @@ class Question(models.Model):
         return upvotes, downvotes, votes
 
     def get_votes(self):
-        upvotes = list(self.upvotes.all())
-        downvotes = list(self.downvotes.all())
+        upvotes = self.convert_to_pk(list(self.upvotes.all()))
+        downvotes = self.convert_to_pk(list(self.downvotes.all()))
         return upvotes, downvotes
+
+    def convert_to_pk(self, list):
+        new_list = []
+        for user in list:
+            new_list.append(user.pk)
+        return new_list
 
     def upvote(self, id):
         upvotes, downvotes = self.get_votes()

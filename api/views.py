@@ -47,7 +47,6 @@ class QuestionList(ModelViewSet):
             data_copy['downvotes'] = downvotes
             data_copy['votes'] = votes
             kwargs['data'] = data_copy
-            breakpoint()
         return serializer_class(*args, **kwargs)
 
     def get_permissions(self):
