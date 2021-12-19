@@ -263,6 +263,45 @@ PATCH /questions/9/
 }
 ```
 
+## Update Question's Accepted Answer
+Token authentication required. Authenticated user must match the author of the question. Set field value to the pk of the desired answer. To set no accepted answer, set value to `null`.
+### Request
+```json
+PATCH /questions/9/
+{
+	"answered": 1
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 9,
+	"title": "Why is my knife so dull?",
+	"body": "I make sure to run it in the dishwasher after every use...",
+	"author": "admin",
+	"votes": 1,
+	"answers": [
+		{
+			"pk": 1,
+			"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+			"author": "james",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:28.001432Z",
+			"favorited": []
+		},
+		(...)
+	],
+	"created_at": "2021-12-15T00:10:31.523378Z",
+	"favorited": [
+		1,
+		2
+	],
+	"answered": 1
+}
+```
+
 ## Delete Question
 Token authentication required. Authentication should match the author of the question. Body should be empty.
 ### Request
