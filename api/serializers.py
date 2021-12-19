@@ -1,12 +1,21 @@
 from rest_framework import serializers
-from .models import Answer, Question, User
+from .models import Answer, Question, User, Tag
 
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = (
+            'pk',
+            'name',
+            'slug',
+        )
 
 class AnswerSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     question = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
-        model = Answer
+        model = Answer 
         fields = (
             'pk',
             'body',
@@ -21,6 +30,8 @@ class AnswerSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, read_only=True)
     author = serializers.StringRelatedField(read_only=True)
+    tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+
     class Meta:
         model = Question
         fields = (
@@ -33,11 +44,14 @@ class QuestionSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
+            'tags',
         )
 
 
 class QuestionForUserSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+
     class Meta:
         model = Question
         fields = (
@@ -49,11 +63,14 @@ class QuestionForUserSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
+            # 'tags',
         )
 
 
 class QuestionSearchSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+
     class Meta:
         model = Question
         fields = (
@@ -65,6 +82,7 @@ class QuestionSearchSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
+            # 'tags',
         )
 
 
@@ -82,3 +100,5 @@ class UserSerializer(serializers.ModelSerializer):
             'image_url',
             'date_joined',
         )
+
+
