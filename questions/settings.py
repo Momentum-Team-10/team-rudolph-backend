@@ -159,7 +159,10 @@ del DATABASES['default']['OPTIONS']['sslmode']
 AUTH_USER_MODEL = 'api.User'
 
 DJOSER = {
-    'USER_CREATE_PASSWORD_RETYPE': True
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SERIALIZERS': {
+        'current_user': 'api.serializers.UserSerializer'
+    }
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
