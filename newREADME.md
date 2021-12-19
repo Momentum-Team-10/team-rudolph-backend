@@ -14,10 +14,14 @@
 * [Single Question Details]()
 * [Update Question's Favorited Field]()
 * [Update Question's Accepted Answer]()
+* [Upvote Question]()
+* [Downvote Question]()
 * [Delete Question]()
 * [Search Questions]()
 * [Search Answers]()
 * [Update Answer's Favorited Field]()
+* [Upvote Question]()
+* [Downvote Question]()
 
 ## General Instructions
 The base url for all the extensions below is: `https://questions-t10.herokuapp.com/`.
@@ -340,6 +344,70 @@ PATCH /questions/9/
 }
 ```
 
+## Upvote Question
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/10/
+{
+	"upvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": 1,
+	"upvotes": [
+		3
+	],
+	"downvotes": [],
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null,
+	"tags": []
+}
+```
+
+## Downvote Question
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/10/
+{
+	"downvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": -1,
+	"upvotes": [],
+	"downvotes": [
+		2
+	],
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null,
+	"tags": []
+}
+```
+
 ## Delete Question
 Token authentication required. Authentication should match the author of the question. Body should be empty.
 ### Request
@@ -421,6 +489,66 @@ PATCH /questions/9/answers/2/
 	"created_at": "2021-12-15T00:19:51.903050Z",
 	"favorited": [
 		3
+	]
+}
+```
+
+## Upvote Answer
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/9/answers/1/
+{
+	"upvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+	"author": "james",
+	"question": 9,
+	"votes": 1,
+	"upvotes": [
+		1
+	],
+	"downvotes": [],
+	"created_at": "2021-12-15T00:19:28.001432Z",
+	"favorited": [
+		1,
+		2
+	]
+}
+```
+
+## Downvote Answer
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/9/answers/1/
+{
+	"downvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+	"author": "james",
+	"question": 9,
+	"votes": -1,
+	"upvotes": [],
+	"downvotes": [
+		3
+	],
+	"created_at": "2021-12-15T00:19:28.001432Z",
+	"favorited": [
+		1,
+		2
 	]
 }
 ```
