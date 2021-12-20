@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsQuestionAuthor(permissions.BasePermission):
+class IsAuthor(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         methods = ('DELETE', 'PATCH')
         if request.method in methods:
