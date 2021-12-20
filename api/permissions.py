@@ -10,6 +10,13 @@ class IsQuestionAuthor(permissions.BasePermission):
             return obj.author == request.user
 
 
+class IsQuestionUnanswered(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if len(obj.answers.all()) == 0:
+            return True
+        return False
+
+
 class NoPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return False
