@@ -552,3 +552,78 @@ PATCH /questions/9/answers/1/
 	]
 }
 ```
+
+
+
+## Tags
+Token authentication required. 
+### GET Request
+```json
+GET /tags/
+{
+  
+}
+```
+### Response
+```json
+200 OK
+[
+  {
+    "pk": 1,
+    "name": "Baking",
+    "slug": "baking"
+  },
+  {
+    "pk": 2,
+    "name": "Butchery",
+    "slug": "butchery"
+  },
+  {
+    "pk": 3,
+    "name": "Seafood",
+    "slug": "seafood"
+  },
+  {
+    "pk": 4,
+    "name": "Smoking",
+    "slug": "smoking"
+  },
+  {
+    "pk": 5,
+    "name": "Vegetables",
+    "slug": "vegetables"
+  }
+]
+```
+
+### POST Request
+```json
+POST /tags/
+{
+  "name": "Fruit"
+=======
+{
+	"pk": 1,
+	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+	"author": "james",
+	"question": 9,
+	"votes": 1,
+	"upvotes": [
+		1
+	],
+	"downvotes": [],
+	"created_at": "2021-12-15T00:19:28.001432Z",
+	"favorited": [
+		1,
+		2
+	]
+}
+```
+```json
+201 Created
+{
+  "pk": 6,
+  "name": "Fruit",
+  "slug": "fruit"
+}
+```
