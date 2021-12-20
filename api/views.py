@@ -5,7 +5,7 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIV
 from .models import Question, Answer, User, Tag
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer, TagSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
-from .permissions import IsQuestionAuthor, NoPermission
+from .permissions import IsQuestionAuthor, NoPermission, IsQuestionUnanswered
 from django.contrib.postgres.search import SearchVector
 
 class AddListTags(ListCreateAPIView):
@@ -60,7 +60,7 @@ class QuestionList(ModelViewSet):
             if "favorited" in data:
                 permission_classes = [IsAuthenticated]
             elif "title" in data or "body" in data:
-                permission_classes = [NoPermission]
+                permission_classes = [IsQuestionUnanswered, IsQuestionAuthor]
             elif "answered" in data:
                 permission_classes = [IsQuestionAuthor]
             else:
