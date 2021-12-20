@@ -5,7 +5,7 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIV
 from .models import Question, Answer, User, Tag
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer, TagSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
-from .permissions import IsQuestionAuthor, NoPermission, IsQuestionUnanswered
+from .permissions import IsAuthor, NoPermission, IsQuestionUnanswered
 from django.contrib.postgres.search import SearchVector
 
 class AddListTags(ListCreateAPIView):
@@ -43,9 +43,6 @@ class QuestionList(ModelViewSet):
             data_copy = data.copy()
             user = self.request.user.pk
             upvotes, downvotes, votes = question.update_votes(action, user)
-            data_copy['upvotes'] = upvotes
-            data_copy['downvotes'] = downvotes
-            data_copy['votes'] = votes
             kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 
@@ -55,14 +52,14 @@ class QuestionList(ModelViewSet):
         """
         data = self.request.data
         if self.request.method == 'DELETE':
-            permission_classes = [IsQuestionAuthor]
+            permission_classes = [IsAuthor]
         elif self.request.method == "PATCH":
             if "favorited" in data:
                 permission_classes = [IsAuthenticated]
             elif "title" in data or "body" in data:
-                permission_classes = [IsQuestionUnanswered, IsQuestionAuthor]
+                permission_classes = [IsQuestionUnanswered, IsAuthor]
             elif "answered" in data:
-                permission_classes = [IsQuestionAuthor]
+                permission_classes = [IsAuthor]
             else:
                 permission_classes = [IsAuthenticated]
         else:
@@ -163,10 +160,16 @@ class AnswerDetail(UpdateAPIView):
 
     def get_permissions(self):
         data = self.request.data
-        if "favorited" in data or "upvotes" in data or "downvotes" in data:
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = [NoPermission]
+        if self.request.method == "PATCH":
+            patch_fields = ("favorited", "upvotes", "downvotes")
+            if any(field in data for field in patch_fields):
+                permission_classes = [IsAuthenticated]
+            elif "body" in data:
+                permission_classes = [IsAuthor]
+            else:
+                permission_classes = [NoPermission]
+        elif self.request.method == "DELETE":
+            permission_classes = [IsAuthor]
         return [permission() for permission in permission_classes]
 
 
