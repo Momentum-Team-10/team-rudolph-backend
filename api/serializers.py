@@ -11,8 +11,14 @@ class TagSerializer(serializers.ModelSerializer):
             'slug',
         )
 
+class AuthorSerializer(serializers.ModelSerializer):
+
+        class Meta:
+                model = User
+                fields = ('pk', 'username',)
+
 class AnswerSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = AuthorSerializer(read_only=True)
     question = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Answer 
@@ -29,9 +35,13 @@ class AnswerSerializer(serializers.ModelSerializer):
         )
 
 
+
+
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, read_only=True)
-    author = serializers.StringRelatedField(read_only=True)
+    author = AuthorSerializer(read_only=True)
     tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
 
     class Meta:
@@ -54,7 +64,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class QuestionForUserSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
 
     class Meta:
         model = Question
@@ -67,13 +77,13 @@ class QuestionForUserSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
-            # 'tags',
+            'tags',
         )
 
 
 class QuestionSearchSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    # tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
 
     class Meta:
         model = Question
@@ -86,7 +96,7 @@ class QuestionSearchSerializer(serializers.ModelSerializer):
             'created_at',
             'favorited',
             'answered',
-            # 'tags',
+            'tags',
         )
 
 

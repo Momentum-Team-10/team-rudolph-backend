@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from autoslug import AutoSlugField
+from django.db.models.constraints import UniqueConstraint
+
 
 
 # Create your models here.
@@ -37,6 +39,9 @@ class Question(models.Model):
     favorited = models.ManyToManyField('User', related_name="fav_questions", blank=True)
     answered = models.ForeignKey('Answer', on_delete=models.DO_NOTHING, related_name="accepted", null=True, blank=True)
     tags = models.ManyToManyField('Tag', related_name="questions_tag", blank=True)
+
+    class Meta:
+            ordering = ('votes', 'created_at')
 
 
     def __repr__(self):
@@ -109,6 +114,12 @@ class Answer(models.Model):
     downvotes = models.ManyToManyField('User', related_name="downvoted_answers", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_answers", blank=True)
+
+    class Meta:
+        ordering = ('votes', 'created_at')
+
+
+
 
     def __repr__(self):
         return f"<Answer author={self.author} question={self.question}>"

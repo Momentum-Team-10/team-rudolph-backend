@@ -424,3 +424,62 @@ PATCH /questions/9/answers/2/
 	]
 }
 ```
+
+
+## Tags
+Token authentication required. 
+### GET Request
+```json
+GET /tags/
+{
+	
+}
+```
+### Response
+```json
+200 OK
+[
+  {
+    "pk": 1,
+    "name": "Baking",
+    "slug": "baking"
+  },
+  {
+    "pk": 2,
+    "name": "Butchery",
+    "slug": "butchery"
+  },
+  {
+    "pk": 3,
+    "name": "Seafood",
+    "slug": "seafood"
+  },
+  {
+    "pk": 4,
+    "name": "Smoking",
+    "slug": "smoking"
+  },
+  {
+    "pk": 5,
+    "name": "Vegetables",
+    "slug": "vegetables"
+  }
+]
+```
+
+### POST Request
+```json
+POST /tags/
+{
+  "name": "Fruit"
+}
+```
+### Response
+```json
+201 Created
+{
+  "pk": 6,
+  "name": "Fruit",
+  "slug": "fruit"
+}
+```
