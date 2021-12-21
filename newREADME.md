@@ -18,6 +18,9 @@
 * [Downvote Question]()
 * [Delete Question]()
 * [Search Questions]()
+* [Add New Answer to Question]()
+* [Edit Answer]()
+* [Delete Answer]()
 * [Search Answers]()
 * [Update Answer's Favorited Field]()
 * [Upvote Question]()
@@ -446,6 +449,72 @@ GET /questions?search=knife
 ]
 ```
 
+## Add New Answer to Question
+Token authentication required. Body field required.
+### Request
+```json
+POST /questions/10/answers/
+{
+	"body": "I think you fold it hot dog style, not hamburger."
+}
+```
+### Response
+```json
+201 Created
+{
+	"pk": 4,
+	"body": "I think you fold it hot dog style, not hamburger.",
+	"author": {
+		"pk": 2,
+		"username": "james"
+	},
+	"question": 10,
+	"votes": 0,
+	"upvotes": [],
+	"downvotes": [],
+	"created_at": "2021-12-21T14:07:41.639121Z",
+	"favorited": []
+}
+```
+
+## Edit Answer
+Token authentication required, and must match the author of the answer. Body field required.
+### Request
+```json
+PATCH /questions/10/answers/4/
+{
+	"body": "I think you fold it hamburger, not hot dog."
+}
+```
+### Response
+```json
+{
+	"pk": 4,
+	"body": "I think you fold it hamburger, not hot dog.",
+	"author": {
+		"pk": 2,
+		"username": "james"
+	},
+	"question": 10,
+	"votes": 0,
+	"upvotes": [],
+	"downvotes": [],
+	"created_at": "2021-12-21T14:07:41.639121Z",
+	"favorited": []
+}
+```
+
+## Delete Answer
+Token authentication required, and must match the author of the answer. Body should be empty.
+### Request
+```json
+DELETE /questions/10/answers/4/
+```
+### Response
+```json
+204 No Content
+```
+
 ## Search Answers
 Spaces in search term need to replaced by a +. Body should be empty.
 ### Request
@@ -601,24 +670,9 @@ GET /tags/
 POST /tags/
 {
   "name": "Fruit"
-=======
-{
-	"pk": 1,
-	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
-	"author": "james",
-	"question": 9,
-	"votes": 1,
-	"upvotes": [
-		1
-	],
-	"downvotes": [],
-	"created_at": "2021-12-15T00:19:28.001432Z",
-	"favorited": [
-		1,
-		2
-	]
 }
 ```
+### Response
 ```json
 201 Created
 {
