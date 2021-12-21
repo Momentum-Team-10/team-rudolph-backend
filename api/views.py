@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from .models import Question, Answer, User, Tag
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer, TagSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
@@ -120,7 +120,7 @@ class QsAnswerList(ListCreateAPIView):
 
 
 
-class AnswerDetail(UpdateAPIView):
+class AnswerDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
@@ -170,6 +170,8 @@ class AnswerDetail(UpdateAPIView):
                 permission_classes = [NoPermission]
         elif self.request.method == "DELETE":
             permission_classes = [IsAuthor]
+        elif self.request.method == "GET":
+            permission_classes = [NoPermission]
         return [permission() for permission in permission_classes]
 
 
