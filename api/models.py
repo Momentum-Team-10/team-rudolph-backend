@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from autoslug import AutoSlugField
 from django.db.models.constraints import UniqueConstraint
+from django.db.models.fields import NullBooleanField
 
 
 
@@ -101,6 +102,13 @@ class Question(models.Model):
             if id in upvotes:
                 upvotes.remove(id)
         return upvotes, downvotes
+
+    def update_answered(self, pk):
+        answer = Answer.objects.get(pk=pk)
+        if answer == self.answered:
+            return None
+        return pk
+
 
 
 class Answer(models.Model):

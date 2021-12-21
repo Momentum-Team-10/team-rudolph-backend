@@ -46,6 +46,13 @@ class QuestionList(ModelViewSet):
             data_copy['upvotes'] = upvotes
             data_copy['downvotes'] = downvotes
             kwargs['data'] = data_copy
+        elif 'answered' in data:
+            question = self.get_object()
+            data_copy = data.copy()
+            answer = data['answered']
+            answered = question.update_answered(answer)
+            data_copy['answered'] = answered
+            kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 
     def get_permissions(self):
