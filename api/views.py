@@ -153,10 +153,9 @@ class AnswerDetail(RetrieveUpdateDestroyAPIView):
             answer =self.get_object()
             data_copy = data.copy()
             user = self.request.user.pk
-            upvotes, downvotes, votes = answer.update_votes(action, user)
+            upvotes, downvotes = answer.update_votes(action, user)
             data_copy['upvotes'] = upvotes
             data_copy['downvotes'] = downvotes
-            data_copy['votes'] = votes
             kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 
