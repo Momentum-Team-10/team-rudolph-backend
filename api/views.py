@@ -42,7 +42,9 @@ class QuestionList(ModelViewSet):
             question =self.get_object()
             data_copy = data.copy()
             user = self.request.user.pk
-            upvotes, downvotes, votes = question.update_votes(action, user)
+            upvotes, downvotes = question.update_votes(action, user)
+            data_copy['upvotes'] = upvotes
+            data_copy['downvotes'] = downvotes
             kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 

@@ -43,6 +43,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, read_only=True)
     author = AuthorSerializer(read_only=True)
     tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    votes = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
@@ -60,6 +61,9 @@ class QuestionSerializer(serializers.ModelSerializer):
             'answered',
             'tags',
         )
+    
+    def get_votes(self, obj):
+        return len(obj.upvotes.all()) - len(obj.downvotes.all())
 
 
 class QuestionForUserSerializer(serializers.ModelSerializer):
