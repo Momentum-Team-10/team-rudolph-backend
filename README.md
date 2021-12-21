@@ -1,93 +1,683 @@
-# Questionbox
+# Questions API Documentation
 
-This application is a question and answer platform, similar to Stack Overflow. It does _not_ have to be themed to code-related questions, though. Theming and design is up to you.
+## Table of Contents
+* [General Instructions]()
+* [CRUD vs. HTTP Reference]()
+* [User Login]()
+* [User Log Out]()
+* [Register New User]()
+* [Retrieve Logged In User Info]()
+* [Update Logged In User Info]()
+* [Get User Details]()
+* [List All Questions]()
+* [Add New Question]()
+* [Single Question Details]()
+* [Update Question's Favorited Field]()
+* [Update Question's Accepted Answer]()
+* [Upvote Question]()
+* [Downvote Question]()
+* [Delete Question]()
+* [Search Questions]()
+* [Add New Answer to Question]()
+* [Edit Answer]()
+* [Delete Answer]()
+* [Search Answers]()
+* [Update Answer's Favorited Field]()
+* [Upvote Question]()
+* [Downvote Question]()
 
-You will likely not be able to do ALL of the listed requirements. That is OK. Decide what the core functionality is and what you can wait to implement once you have the basics done.
+## General Instructions
+The base url for all the extensions below is: `https://questions-t10.herokuapp.com/`.
+Please be sure to use double quotes ("") for all JSON requests.
+Several endpoints require Token Authentication. This is done in the header of the HTTP request, with the following form:
+```http
+Authentication: "Token <token string>"
+```
+Please refer to the documentation for the HTTP request library you are using to ensure the proper syntax.
 
-### Back-end: The API
+## CRUD vs. HTTP Reference
+|**CRUD**|**HTTP**|
+|:------:|:------:|
+|Create|POST|
+|Read|GET|
+|Update|PUT/PATCH|
+|Delete|DELETE|
 
-Backend devs will build an API using Django and Django REST Framework that allows users to create questions and answers to questions. Question-askers can mark an answer as accepted. Logged-in users can "star" or favorite a question or answer. Your application only needs to serve JSON, not HTML.
+## User Login
+Username and password required.
+### Request
+```json
+POST /auth/token/login/
+{
+    "username": "babish",
+    "password": "tinywhisk"
+}
+```
+### Response
+```json
+200 OK
+{
+    "auth_token": "heybabyihearthebluesacallintossedsaladandscrambledeggs"
+}
+```
 
-You will need to make a list of your endpoints available to the front-end devs on your team.
+## User Log Out
+Token authentication required, body should be empty.
+### Request
+```json
+POST /auth/token/logout/
+```
+### Response
+```json
+204 No Content
+```
 
-#### Requirements
+## Register New User
+Username, password, and retyped password required.
+### Request
+```json
+POST /auth/users/
+{
+    "username": "chefjohn",
+    "password": "cayennepepper",
+    "re_password": "cayennepepper"
+}
+```
+### Response
+```json
+201 Created
+{
+    "email": "",
+    "username": "chefjohn",
+    "id": 5
+}
+```
 
-- Allow an authenticated user to create a question (allowing for long-form text).
-- Allow an authenticated user to create an answer to a question (one question can have many answers).
-- Allow unauthenticated users to view all questions and answers.
-- Have registration and token-based authentication.
-- Allow a user to get a list of all the questions they have posted.
-- Allow a user to get a list of all the answers they have posted.
-- Allow the original author of the question to mark an answer as accepted.
-- Questions cannot be edited once they have been asked (_note_: allowing editing of unanswered questions is listed as an extra challenge).
-- A question can be deleted by its author, whether answered or unanswered. If it is deleted, all associated answers should also be deleted.
-- Users can search the database by supplying a search term. This should use [Django's PostgreSQL full-text search](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/).
-  - At minimum allow a search in the text of a question.
-  - A more comprehensive search would allow searching both questions and answers.
-- Authenticated users can "star" or favorite questions or answers they like. They should also be able to un-star anything that they have starred.
-- Deploy to Heroku.
+## Retrieve Logged In User Info
+Body should be empty.
+### Request
+```json
+GET /auth/users/me/
+```
+### Response
+```json
+200 OK
+{
+	"username": "thomas",
+	"bio": null,
+	"questions": [],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": [
+				3
+			]
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
+}
+```
 
-### 🌶️ Spicy features
+## Update Logged In User Info
+Token authentication required. Should correspond to user being updated. Only include fields meant to be updated.
+### Request
+```json
+PATCH /auth/users/me/
+{
+    "bio": "I like the InstaPot."
+}
+```
+### Response
+```json
+200 OK
+{
+	"username": "thomas",
+	"bio": "I like the InstaPot.",
+	"questions": [],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": [
+				3
+			]
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
+}
+```
 
-- Add tags to questions and allow search by tags
-- Allow a user to upload a profile photo.
-  - for Heroku, you'll need to configure a storage backend like Amazon S3 in order to upload files.
-- Allow an unanswered question to be edited.
-- Allow the author of an answer to delete or edit an answer.
+## Get User Details
+Integer should be the id of the target user. Body should be empty.
+### Request
+```json
+GET /user/3/
+```
+### Response
+```json
+200 OK
+{
+	"username": "thomas",
+	"bio": null,
+	"questions": [
+		{
+			"pk": 11,
+			"title": "Why am I in couples counseling over a pan?",
+			"body": "The cast iron skillet had a ton of gunk on it, so I went to town on it with soap and iron wool. What's the big deal?",
+			"author": "thomas",
+			"votes": 0,
+			"created_at": "2021-12-17T11:21:43.613489Z",
+			"favorited": [],
+			"answered": null
+		}
+	],
+	"answers": [
+		{
+			"pk": 2,
+			"body": "Is it non-stick?",
+			"author": "thomas",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:51.903050Z",
+			"favorited": []
+		}
+	],
+	"image_url": null,
+	"date_joined": "2021-12-14T22:51:16.121295Z"
+}
+```
 
-### Back-end development notes
+## List All Questions
+Body should be empty.
+### Request
+```json
+GET /questions/
+```
+### Response
+```json
+200 OK
+[
+	{
+		"pk": 10,
+		"title": "What does it mean to fold in the cheese?",
+		"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+		"author": "admin",
+		"votes": 0,
+		"answers": [],
+		"created_at": "2021-12-15T13:31:42.189621Z",
+		"favorited": [],
+		"answered": null
+	},
+    (...)
+]
+```
 
-You should use [djoser](https://djoser.readthedocs.io/en/latest/) and [token-based authentication](https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication) to handle registration and login.
+## Add New Question
+Token authentication required. Title field is required, body field is optional.
+### Request
+```json
+POST /questions/
+{
+    "title": "Why am I in couples counseling over a pan?",
+    "body": "The cast iron skillet had a ton of gunk on it, so I went to town on it with soap and iron wool. What's the big deal?"
+}
+```
+### Response
+```json
+201 Created
+{
+	"pk": 11,
+	"title": "Why am I in couples counseling over a pan?",
+	"body": "The cast iron skillet had a ton of gunk on it, so I went to town on it with soap and iron wool. What's the big deal?",
+	"author": "thomas",
+	"votes": 0,
+	"answers": [],
+	"created_at": "2021-12-17T11:21:43.613489Z",
+	"favorited": [],
+	"answered": null
+}
+```
 
-### CORS
+## Single Question Details
+Integer should be the id of the target question. Body should be empty.
+### Request
+```json
+GET /questions/9/
+```
+### Response
+```json
+200 OK
+{
+	"pk": 9,
+	"title": "Why is my knife so dull?",
+	"body": "I make sure to run it in the dishwasher after every use...",
+	"author": "admin",
+	"votes": 1,
+	"answers": [
+		{
+			"pk": 1,
+			"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+			"author": "james",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:28.001432Z",
+			"favorited": []
+		}
+	],
+	"created_at": "2021-12-15T00:10:31.523378Z",
+	"favorited": [],
+	"answered": null
+}
+```
 
-CORS (Cross-Origin Resource Sharing) headers must be added to your responses for the front-end app to interact with your API. [Read this blog post to find out how to set up CORS](https://www.techiediaries.com/django-cors/). You will want to use django-cors-headers (the second option mentioned in the blog post) and set `CORS_ALLOW_ALL_ORIGINS = True`.
+## Update Question's Favorited Field
+Token authentication required. If User has already favorited the question, their pk will be removed from the Favorited field.
+### Request
+```json
+PATCH /questions/9/
+{
+	"favorited": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": 0,
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null
+}
+```
 
-## Front-End: The React application
+## Update Question's Accepted Answer
+Token authentication required. Authenticated user must match the author of the question. Set field value to the pk of the desired answer. To set no accepted answer, set value to `null`.
+### Request
+```json
+PATCH /questions/9/
+{
+	"answered": 1
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 9,
+	"title": "Why is my knife so dull?",
+	"body": "I make sure to run it in the dishwasher after every use...",
+	"author": "admin",
+	"votes": 1,
+	"answers": [
+		{
+			"pk": 1,
+			"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+			"author": "james",
+			"question": 9,
+			"votes": 1,
+			"created_at": "2021-12-15T00:19:28.001432Z",
+			"favorited": []
+		},
+		(...)
+	],
+	"created_at": "2021-12-15T00:10:31.523378Z",
+	"favorited": [
+		1,
+		2
+	],
+	"answered": 1
+}
+```
 
-The front-end team will build a React application that will send AJAX requests to the QuestionBox API.
+## Upvote Question
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/10/
+{
+	"upvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": 1,
+	"upvotes": [
+		3
+	],
+	"downvotes": [],
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null,
+	"tags": []
+}
+```
 
-This application is a question and answer platform, similar to Stack Overflow in format, but you can theme it and design it however you like. This application should allow logged-in users to ask questions, give and receive answers, and mark an answer as accepted. Users that are not logged in should still be able to view questions and answers, but cannot ask questions, give answers, or mark answers as accepted.
+## Downvote Question
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/10/
+{
+	"downvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 10,
+	"title": "What does it mean to fold in the cheese?",
+	"body": "Do you fold it in half like a piece of paper and drop it in the pot?",
+	"author": "admin",
+	"votes": -1,
+	"upvotes": [],
+	"downvotes": [
+		2
+	],
+	"answers": [],
+	"created_at": "2021-12-15T13:31:42.189621Z",
+	"favorited": [
+		3
+	],
+	"answered": null,
+	"tags": []
+}
+```
 
-### Requirements
+## Delete Question
+Token authentication required. Authentication should match the author of the question. Body should be empty.
+### Request
+```json
+DELETE /questions/11/
+```
+### Response
+```json
+204 No Content
+```
 
-- Users can create an account.
-- Users can log in.
-- Authenticated users can ask a question.
-  - A question cannot be edited.
-  - A user can delete their own question.
-- Authenticated users can answer a question.
-- Authenticated users can choose an accepted answer among the answers to one of their questions.
-- Authenticated users have a profile page that lists all their questions and answers.
-- Authenticated users can "star" a question or answer they like.
-  - Allow a user to "unstar" something they have previously starred.
-- You will have to route some URLs.
-  - Login and registration should each have a URL, or one for both if they are in the same view.
-  - Questions should have their own route.
-  - User profiles should have their own route.
-  - If implementing pagination, you will likely use routes to implement this.
-- Deploy to Netlify
+## Search Questions
+Spaces in search term need to replaced by a +. Body should be empty.
+### Request
+```json
+GET /questions?search=knife
+```
+### Response
+```json
+200 OK
+[
+	{
+		"pk": 9,
+		"title": "Why is my knife so dull?",
+		"body": "I make sure to run it in the dishwasher after every use...",
+		"author": "admin",
+		"votes": 1,
+		"created_at": "2021-12-15T00:10:31.523378Z",
+		"favorited": [
+			1,
+			2,
+			3
+		],
+		"answered": null
+	}
+]
+```
 
-### 🌶️ Spicy features
+## Add New Answer to Question
+Token authentication required. Body field required.
+### Request
+```json
+POST /questions/10/answers/
+{
+	"body": "I think you fold it hot dog style, not hamburger."
+}
+```
+### Response
+```json
+201 Created
+{
+	"pk": 4,
+	"body": "I think you fold it hot dog style, not hamburger.",
+	"author": {
+		"pk": 2,
+		"username": "james"
+	},
+	"question": 10,
+	"votes": 0,
+	"upvotes": [],
+	"downvotes": [],
+	"created_at": "2021-12-21T14:07:41.639121Z",
+	"favorited": []
+}
+```
 
-Most of these are dependent on whether the API supports these capabilities.
+## Edit Answer
+Token authentication required, and must match the author of the answer. Body field required.
+### Request
+```json
+PATCH /questions/10/answers/4/
+{
+	"body": "I think you fold it hamburger, not hot dog."
+}
+```
+### Response
+```json
+{
+	"pk": 4,
+	"body": "I think you fold it hamburger, not hot dog.",
+	"author": {
+		"pk": 2,
+		"username": "james"
+	},
+	"question": 10,
+	"votes": 0,
+	"upvotes": [],
+	"downvotes": [],
+	"created_at": "2021-12-21T14:07:41.639121Z",
+	"favorited": []
+}
+```
 
-- Allow users to search the API using a search term.
-  - If your API supports tags, allow search by tags.
-- The list of questions that comes back from the API may be paginated. If so, you should implement pagination in your application.
-- Allow questions to be edited if they have not been answered.
-- Allow users to show only the questions and/or answers they have starred.
-- Allow users to follow/unfollow each other.
-- Allow users to upload a profile photo.
+## Delete Answer
+Token authentication required, and must match the author of the answer. Body should be empty.
+### Request
+```json
+DELETE /questions/10/answers/4/
+```
+### Response
+```json
+204 No Content
+```
 
-### Front-end Development notes
+## Search Answers
+Spaces in search term need to replaced by a +. Body should be empty.
+### Request
+```json
+GET /answers?search=soak
+```
+### Response
+```json
+200 OK
+[
+	{
+		"pk": 1,
+		"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+		"author": "james",
+		"question": 9,
+		"votes": 1,
+		"created_at": "2021-12-15T00:19:28.001432Z",
+		"favorited": []
+	}
+]
+```
 
-During development, you will want to be able to make requests before the API is complete. You can handle this in a few ways.
+## Update Answer's Favorited Field
+Token authentication required. If User has already favorited the answer, their pk will be removed from the Favorited field.
+### Request
+```json
+PATCH /questions/9/answers/2/
+{
+	"favorited": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 2,
+	"body": "Is it non-stick?",
+	"author": "thomas",
+	"question": 9,
+	"votes": 1,
+	"created_at": "2021-12-15T00:19:51.903050Z",
+	"favorited": [
+		3
+	]
+}
+```
 
-One way is to make functions or methods for all your API calls, but instead of having them actually make the calls at first, have them set the data you are expecting without actually making an API call. Another way is to use the provided exported mock API specification for Mockoon, a tool that will run a mock server for you. In this case, you will want to be able to switch which server you use based on the environment your code is running in.
+## Upvote Answer
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/9/answers/1/
+{
+	"upvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+	"author": "james",
+	"question": 9,
+	"votes": 1,
+	"upvotes": [
+		1
+	],
+	"downvotes": [],
+	"created_at": "2021-12-15T00:19:28.001432Z",
+	"favorited": [
+		1,
+		2
+	]
+}
+```
 
-You can [read more about approaches to building your front-end before the API is done in this dev.to article](https://dev.to/momentum/how-to-build-a-front-end-app-before-you-have-an-api-3ai3).
+## Downvote Answer
+Token authentication required. Field value should be an empty list (or array, for the Javascript-inclined).
+### Request
+```json
+PATCH /questions/9/answers/1/
+{
+	"downvotes": []
+}
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"body": "You should let it soak at least 30 minutes before you put it in the dishwasher.",
+	"author": "james",
+	"question": 9,
+	"votes": -1,
+	"upvotes": [],
+	"downvotes": [
+		3
+	],
+	"created_at": "2021-12-15T00:19:28.001432Z",
+	"favorited": [
+		1,
+		2
+	]
+}
+```
 
-If you need to switch how you access your data based on environment, read [this article on create-react-app-environments](https://medium.com/@tacomanator/environments-with-create-react-app-7b645312c09d).
 
-You can work with a back-end dev to get the back-end API running on your local machine, but you do not have to.
+
+## Tags
+Token authentication required. 
+### GET Request
+```json
+GET /tags/
+{
+  
+}
+```
+### Response
+```json
+200 OK
+[
+  {
+    "pk": 1,
+    "name": "Baking",
+    "slug": "baking"
+  },
+  {
+    "pk": 2,
+    "name": "Butchery",
+    "slug": "butchery"
+  },
+  {
+    "pk": 3,
+    "name": "Seafood",
+    "slug": "seafood"
+  },
+  {
+    "pk": 4,
+    "name": "Smoking",
+    "slug": "smoking"
+  },
+  {
+    "pk": 5,
+    "name": "Vegetables",
+    "slug": "vegetables"
+  }
+]
+```
+
+### POST Request
+```json
+POST /tags/
+{
+  "name": "Fruit"
+}
+```
+### Response
+```json
+201 Created
+{
+  "pk": 6,
+  "name": "Fruit",
+  "slug": "fruit"
+}
+```
