@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from .models import Question, Answer, User, Tag
 from .serializers import AnswerSerializer, QuestionSerializer, UserSerializer, QuestionSearchSerializer, TagSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly 
-from .permissions import IsQuestionAuthor, NoPermission, IsQuestionUnanswered
+from .permissions import IsAuthor, NoPermission, IsQuestionUnanswered
 from django.contrib.postgres.search import SearchVector
 
 class AddListTags(ListCreateAPIView):
@@ -42,10 +42,9 @@ class QuestionList(ModelViewSet):
             question =self.get_object()
             data_copy = data.copy()
             user = self.request.user.pk
-            upvotes, downvotes, votes = question.update_votes(action, user)
+            upvotes, downvotes = question.update_votes(action, user)
             data_copy['upvotes'] = upvotes
             data_copy['downvotes'] = downvotes
-            data_copy['votes'] = votes
             kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 
@@ -55,14 +54,14 @@ class QuestionList(ModelViewSet):
         """
         data = self.request.data
         if self.request.method == 'DELETE':
-            permission_classes = [IsQuestionAuthor]
+            permission_classes = [IsAuthor]
         elif self.request.method == "PATCH":
             if "favorited" in data:
                 permission_classes = [IsAuthenticated]
             elif "title" in data or "body" in data:
-                permission_classes = [IsQuestionUnanswered, IsQuestionAuthor]
+                permission_classes = [IsQuestionUnanswered, IsAuthor]
             elif "answered" in data:
-                permission_classes = [IsQuestionAuthor]
+                permission_classes = [IsAuthor]
             else:
                 permission_classes = [IsAuthenticated]
         else:
@@ -123,7 +122,7 @@ class QsAnswerList(ListCreateAPIView):
 
 
 
-class AnswerDetail(UpdateAPIView):
+class AnswerDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
@@ -154,18 +153,25 @@ class AnswerDetail(UpdateAPIView):
             answer =self.get_object()
             data_copy = data.copy()
             user = self.request.user.pk
-            upvotes, downvotes, votes = answer.update_votes(action, user)
+            upvotes, downvotes = answer.update_votes(action, user)
             data_copy['upvotes'] = upvotes
             data_copy['downvotes'] = downvotes
-            data_copy['votes'] = votes
             kwargs['data'] = data_copy
         return serializer_class(*args, **kwargs)
 
     def get_permissions(self):
         data = self.request.data
-        if "favorited" in data or "upvotes" in data or "downvotes" in data:
-            permission_classes = [IsAuthenticated]
-        else:
+        if self.request.method == "PATCH":
+            patch_fields = ("favorited", "upvotes", "downvotes")
+            if any(field in data for field in patch_fields):
+                permission_classes = [IsAuthenticated]
+            elif "body" in data:
+                permission_classes = [IsAuthor]
+            else:
+                permission_classes = [NoPermission]
+        elif self.request.method == "DELETE":
+            permission_classes = [IsAuthor]
+        elif self.request.method == "GET":
             permission_classes = [NoPermission]
         return [permission() for permission in permission_classes]
 

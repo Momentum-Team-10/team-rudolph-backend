@@ -20,6 +20,8 @@ class AuthorSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     question = serializers.PrimaryKeyRelatedField(read_only=True)
+    votes = serializers.SerializerMethodField()
+
     class Meta:
         model = Answer 
         fields = (
@@ -34,6 +36,9 @@ class AnswerSerializer(serializers.ModelSerializer):
             'favorited',
         )
 
+    def get_votes(self, obj):
+        return len(obj.upvotes.all()) - len(obj.downvotes.all())
+
 
 
 
@@ -43,6 +48,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, read_only=True)
     author = AuthorSerializer(read_only=True)
     tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    votes = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
@@ -61,10 +67,14 @@ class QuestionSerializer(serializers.ModelSerializer):
             'tags',
         )
 
+    def get_votes(self, obj):
+        return len(obj.upvotes.all()) - len(obj.downvotes.all())
+
 
 class QuestionForUserSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    votes = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
@@ -79,11 +89,16 @@ class QuestionForUserSerializer(serializers.ModelSerializer):
             'answered',
             'tags',
         )
+
+    def get_votes(self, obj):
+        return len(obj.upvotes.all()) - len(obj.downvotes.all())
 
 
 class QuestionSearchSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     tags = serializers.SlugRelatedField(read_only=True, many=True, slug_field="tag")
+    votes = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Question
@@ -98,6 +113,9 @@ class QuestionSearchSerializer(serializers.ModelSerializer):
             'answered',
             'tags',
         )
+
+    def get_votes(self, obj):
+        return len(obj.upvotes.all()) - len(obj.downvotes.all())
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -114,5 +132,3 @@ class UserSerializer(serializers.ModelSerializer):
             'image_url',
             'date_joined',
         )
-
-

@@ -32,7 +32,6 @@ class Question(models.Model):
     title = models.CharField(max_length=250)
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="questions")
-    votes = models.IntegerField(default=0)
     upvotes = models.ManyToManyField('User', related_name="upvoted_questions", blank=True)
     downvotes = models.ManyToManyField('User', related_name="downvoted_questions", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,7 +40,7 @@ class Question(models.Model):
     tags = models.ManyToManyField('Tag', related_name="questions_tag", blank=True)
 
     class Meta:
-            ordering = ('votes', 'created_at')
+            ordering = ('created_at',)
 
 
     def __repr__(self):
@@ -70,8 +69,7 @@ class Question(models.Model):
             upvotes, downvotes = self.upvote(id)
         elif action == 'downvote':
             upvotes, downvotes = self.downvote(id)
-        votes = len(upvotes)-len(downvotes)
-        return upvotes, downvotes, votes
+        return upvotes, downvotes
 
     def get_votes(self):
         upvotes = self.convert_to_pk(list(self.upvotes.all()))
@@ -109,17 +107,13 @@ class Answer(models.Model):
     body = models.TextField()
     author = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name="answers")
     question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name="answers")
-    votes = models.IntegerField(default=0)
     upvotes = models.ManyToManyField('User', related_name="upvoted_answers", blank=True)
     downvotes = models.ManyToManyField('User', related_name="downvoted_answers", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     favorited = models.ManyToManyField('User', related_name="fav_answers", blank=True)
 
     class Meta:
-        ordering = ('votes', 'created_at')
-
-
-
+        ordering = ('created_at',)
 
     def __repr__(self):
         return f"<Answer author={self.author} question={self.question}>"
@@ -147,8 +141,7 @@ class Answer(models.Model):
             upvotes, downvotes = self.upvote(id)
         elif action == 'downvote':
             upvotes, downvotes = self.downvote(id)
-        votes = len(upvotes)-len(downvotes)
-        return upvotes, downvotes, votes
+        return upvotes, downvotes
 
     def get_votes(self):
         upvotes = self.convert_to_pk(list(self.upvotes.all()))
